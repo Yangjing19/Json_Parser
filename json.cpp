@@ -24,7 +24,6 @@ void Json::readJson(std::string json_str, int w)
                 buf.put(ch);
             }
             json_str_ = buf.str();
-            // std::cout <<"buf_str"<< buf.str() <<std::endl;
         }
         else {
             throw W_ERROR;
