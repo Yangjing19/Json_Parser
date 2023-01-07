@@ -24,6 +24,7 @@ void Json::readJson(std::string json_str, int w)
                 buf.put(ch);
             }
             json_str_ = buf.str();
+            // std::cout <<"buf_str"<< buf.str() <<std::endl;
         }
         else {
             throw W_ERROR;
@@ -36,7 +37,7 @@ void Json::readJson(std::string json_str, int w)
         std::cout<< "Other ERRORS" << std::endl;
     }
 }
-bool Json::writeJson(std::string des_str, int w = 0) {
+bool Json::writeJson(std::string des_str, int w) {
     try {
         if (w == 0)
         {
@@ -48,6 +49,7 @@ bool Json::writeJson(std::string des_str, int w = 0) {
             std::ofstream file;
             file.open(des_str);
             file<< json_str_;
+            return true;
         }
         else {
             throw W_ERROR;
@@ -56,49 +58,51 @@ bool Json::writeJson(std::string des_str, int w = 0) {
     }
     catch(std::string s) {
         std::cout<<s<<std::endl;
-        return false;
     }
     catch(...) {
         std::cout<<"Write with unknown error"<<std::endl;
-        return false;
     }
+    return false;
 }
 void Json::fmt_json() {
     try {
         int level = 0;
-        for (int i = 0; i < json_str_.length(); i ++) {
+        std::string tmp = "";
+        for (int i = 0; i < json_str_.length() && json_str_[i] != 0; i ++) {
             char c = json_str_[i];
             switch (c)
             {
             case '{':
             case '[':
-                json_str_ = json_str_ + c + '\n';
+                tmp = tmp + c + '\n';
                 level ++;
                 for (int j = 0; j < level; j++) {
-                    json_str_ += '/t';
+                    tmp += "\t";
                 }
                 break;
             case ',':
-                json_str_ = json_str_ + c + '\n';
+                tmp = tmp + c + '\n';
                 for (int j = 0; j < level; j++) {
-                    json_str_ += '/t';
+                    tmp += "\t";
                 }
+                break;
             case '}':
             case ']':
                 level --;
+                tmp += "\n";
                 for (int j = 0; j < level; j++) {
-                    json_str_ += '/t';
+                    tmp += "\t";
                 }
-                json_str_ += c;
+                tmp += c;
                 break;
 
             default:
-                json_str_ += c;
+                tmp += c;
                 break;
             }
         }
     
-    
+        json_str_ = tmp;
         fmt_ = true;
     }
     catch(...) {
@@ -107,3 +111,6 @@ void Json::fmt_json() {
 
 }
 
+std::string Json::getJson() {
+    return json_str_;
+}

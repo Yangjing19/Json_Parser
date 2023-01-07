@@ -19,4 +19,5 @@ public:
     void readJson(std::string json_str, int w = 0);
     bool writeJson(std::string des_str, int w = 0);
     void fmt_json();
+    std::string getJson();
 };
